@@ -38,7 +38,7 @@ public class UserController {
     response.status(HttpStatus.UNAUTHORIZED_401);
 
     String idToken = request.headers("Authorization");
-    if (idToken == null || idToken == "") {
+    if (idToken == null || "".equals(idToken)) {
       return gson.toJson(new Message("ERROR", "User unauthorized"), Message.class);
     }
 

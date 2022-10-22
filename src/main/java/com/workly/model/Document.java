@@ -10,18 +10,18 @@ import com.google.gson.annotations.SerializedName;
 public class Document {
     @SerializedName("id")
     private int id;
-    @SerializedName("uuid")
-    private String uuid;
-    @SerializedName("link")
-    private String link;
+    @SerializedName("project_id")
+    private int projectId;
+    @SerializedName("upstream")
+    private String upstream;
 
     public Document() {
     }
 
-    public Document(int id, String uuid, String link) {
+    public Document(int id, int projectId, String upstream) {
         this.id = id;
-        this.uuid = uuid;
-        this.link = link;
+        this.projectId = projectId;
+        this.upstream = upstream;
     }
 
     public int getId() {
@@ -32,20 +32,19 @@ public class Document {
         this.id = id;
     }
 
-    public String getUuid() {
-        return uuid;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
-    public String getLink() {
-        return link;
+    public String getUpstream() {
+        return upstream;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUpstream(String upstream) {
+        this.upstream = upstream;
     }
-    
 }

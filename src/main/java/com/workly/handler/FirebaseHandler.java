@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.workly.model.FirebaseLookupUser;
 import com.workly.model.FirebaseUser;
 import com.workly.model.User;
+import com.workly.util.Fetcher;
 import com.workly.util.Message;
 import com.workly.util.MicroserviceConfig;
 
@@ -31,52 +32,11 @@ public class FirebaseHandler {
   }
 
   public Message fetch(String uri, String method, String reqBody) {
-    String fbResp;
-    try {
-      URL url = new URL(
-        this.fbCfg.getHost()
-          + uri
-          + "?key="
-          + this.fbCfg.getExtraConfigs().get("api_key")
-      );
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setDoOutput(true);
-      conn.setRequestMethod(method);
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty("Accept", "application/json");
-
-      if (method == "POST") {
-        OutputStream fbReqOutStream = conn.getOutputStream();
-        OutputStreamWriter fbReqOutWriter = new OutputStreamWriter(fbReqOutStream, "UTF-8");
-        fbReqOutWriter.write(reqBody);
-        fbReqOutWriter.flush();
-        fbReqOutWriter.close();
-      }
-
-      conn.connect();
-
-      BufferedInputStream bufIn;
-      if (conn.getResponseCode() != HttpStatus.OK_200) {
-        bufIn = new BufferedInputStream(conn.getErrorStream());
-      } else {
-        bufIn = new BufferedInputStream(conn.getInputStream());
-      }
-
-      ByteArrayOutputStream bufOut = new ByteArrayOutputStream();
-      int cur;
-      while ((cur = bufIn.read()) != -1) {
-        bufOut.write((byte)cur);
-      }
-      fbResp = bufOut.toString();
-
-      if (conn.getResponseCode() != HttpStatus.OK_200) {
-        return new Message("ERROR", fbResp);
-      }
-    } catch (Exception e) {
-      return new Message("ERROR", e.getMessage());
-    }
-
-    return new Message("INFO", fbResp);
+    String newUri = uri + "?key=" + this.fbCfg.getExtraConfigs().get("api_key");
+    
+    Fetcher fetcher = new Fetcher(this.fbCfg.getHost());
+    
+    return fetcher.fetch(method, newUri, reqBody);
   }
 
   public FirebaseUser create(FirebaseUser fbUser, User user) {

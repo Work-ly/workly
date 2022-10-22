@@ -18,7 +18,7 @@ public class Fetcher {
   private String host;
   
   public Fetcher(String host) {
-    this.host = host;
+    this.host = ("".equals(host)) ? "http://0.0.0.0:8008" : host;
   }
   
   public Message fetch(String method, String uri, String reqBody) {

@@ -21,7 +21,9 @@ import com.workly.model.FirebaseUser;
 import com.workly.model.User;
 import com.workly.util.Message;
 
+import spark.Filter;
 import spark.Route;
+import spark.Spark;
 
 public class UserController {
   private Gson gson = new Gson();
@@ -33,24 +35,19 @@ public class UserController {
     this.dbConn = dbConn;
   }
 
-  public Route auth = (request, response) -> {
-    response.type("application/json");
-    response.status(HttpStatus.UNAUTHORIZED_401);
-
-    String idToken = request.headers("Authorization");
+  public Message auth(String idToken) {
     if (idToken == null || "".equals(idToken)) {
-      return gson.toJson(new Message("ERROR", "User unauthorized"), Message.class);
+      return new Message("ERROR", "User unauthorized");
     }
 
     idToken = idToken.replace("Bearer ", "");
     FirebaseUser fbUser = this.fbHndlr.auth(idToken);
     if (fbUser == null) {
-      return gson.toJson(new Message("ERROR", "User unauthorized"), Message.class);
+      return new Message("ERROR", "User unauthorized");
     }
 
-    response.status(HttpStatus.OK_200);
-    return gson.toJson(new Message("INFO", "User authorized"), Message.class);
-  };
+    return new Message("INFO", "User authorized");
+  }
 
   public Route create = (request, response) -> {
     response.type("application/json");
@@ -107,7 +104,7 @@ public class UserController {
     response.type("application/json");
 
     String userName = request.params(":name");
-    if (userName == null || userName == null) {
+    if (userName == null || "".equals(userName)) {
       System.out.println("Could not get user - Invalid username given");
 
       response.status(HttpStatus.FAILED_DEPENDENCY_424);
@@ -134,10 +131,16 @@ public class UserController {
   public Route getAll = (request, response) -> {
     response.type("application/json");
 
+    Message result = this.auth(request.headers("Authorization"));
+    if (!result.getType().equals("INFO")) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+      return gson.toJson(result, Message.class);
+    }
+
     UserDAO userDAO = new UserDAO(this.dbConn);
     ArrayList<User> users = (ArrayList<User>)userDAO.getAll();
 
-    String resp = "{ \"users\": ";
+    String resp = "{ \"users\": [";
     ImageDAO imgDAO = new ImageDAO(this.dbConn);
     for (int i = 0; i < users.size(); ++i) {
       User user = users.get(i);
@@ -153,13 +156,19 @@ public class UserController {
         resp += ", ";
       }
     }
-    resp += " }";
+    resp += "]\n}";
 
     return resp;
   };
 
   public Route delete = (request, response) -> {
     response.type("application/json");
+
+    Message result = this.auth(request.headers("Authorization"));
+    if (!result.getType().equals("INFO")) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+      return gson.toJson(result, Message.class);
+    }
 
     String idToken = request.headers("Authorization").replace("Bearer ", "");
     FirebaseUser fbUser = this.fbHndlr.auth(idToken);

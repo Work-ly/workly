@@ -6,10 +6,14 @@
 
 package com.workly;
 
+import com.google.gson.Gson;
 import com.workly.controller.TeamController;
 import com.workly.controller.UserController;
 import com.workly.handler.FirebaseHandler;
+import com.workly.model.FirebaseUser;
+import com.workly.util.Message;
 import com.workly.util.MicroserviceConfig;
+import org.eclipse.jetty.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import spark.Spark;
 
@@ -21,7 +25,22 @@ public class Server {
 
     Spark.port(Integer.parseInt(this.cfg.getPort()));
     Spark.init();
-    
+
+    setupBefores();
+
+    UserController usrCntrllr = new UserController(fbHndlr, dbSrv.getConn());
+    Spark.post("/user", "application/json", usrCntrllr.create);
+    Spark.get("/user/:name", "application/json", usrCntrllr.get);
+    Spark.get("/users", "application/json", usrCntrllr.getAll);
+    Spark.delete("/user", "application/json", usrCntrllr.delete);
+
+    TeamController teamController = new TeamController(dbSrv.getConn());
+    Spark.post("/team", "application/json", teamController.create);
+
+    System.out.println("Server running - http://localhost:" + cfg.getPort());
+  }
+
+  private void setupBefores() {
     Spark.options("/*", (request, response) -> {
       String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
       if (accessControlRequestHeaders != null) {
@@ -36,23 +55,5 @@ public class Server {
       return "OK";
     });
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-
-    UserController usrCntrllr = new UserController(fbHndlr, dbSrv.getConn());
-    Spark.path("/", () -> {
-      Spark.get("/user/:name", "application/json", usrCntrllr.get);
-      Spark.get("/users", "application/json", usrCntrllr.getAll);
-      Spark.post("/user", "application/json", usrCntrllr.create);
-      Spark.delete("/user", "application/json", usrCntrllr.delete);
-    });
-    Spark.path("/user", () -> {
-      Spark.post("/auth", usrCntrllr.auth);
-    });
-    
-    TeamController teamController = new TeamController(dbSrv.getConn());
-    Spark.path("/", () -> {
-        Spark.post("/team", "application/json", teamController.create);
-    });
-
-    System.out.println("Server running - http://localhost:" + cfg.getPort());
   }
 }

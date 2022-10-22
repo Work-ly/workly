@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.workly.dao.ImageDAO;
 import com.workly.dao.TeamDAO;
 import com.workly.model.Team;
+import com.workly.util.Fetcher;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;
@@ -19,13 +20,19 @@ import spark.Route;
 public class TeamController {
   private Gson gson = new Gson();
   private Connection dbConn;
+  private Fetcher userHndlr;
 
   public TeamController(@NotNull Connection dbConn) {
     this.dbConn = dbConn;
+    this.userHndlr = new Fetcher("");
   }
   
   public Route create = (request, response) -> {
     response.type("application/json");
+    
+    Message err = this.userHndlr.fetch("POST", "/user/auth", "");
+    if (err.getType() != "INFO")
+      return gson.toJson(err, Message.class);
 
     Team team = gson.fromJson(request.body(), Team.class);
     if (team == null) {

@@ -90,14 +90,40 @@ public class UserDAO implements DAO {
         user.setName(this.rsltSet.getString("name"));
         user.setEmail(this.rsltSet.getString("email"));
         user.setDescription(this.rsltSet.getString("description"));
+        user.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        user.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
+      } else {
+        return null;
+      }
 
-        Image pfpImg = new Image();
-        pfpImg.setId(this.rsltSet.getInt("pfp_img_id"));
-        user.setPfp(pfpImg);
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not get user - " + e.getMessage());
 
-        Image headerImg = new Image();
-        headerImg.setId(this.rsltSet.getInt("header_img_id"));
-        user.setHeader(headerImg);
+      return null;
+    }
+
+    return user;
+  }
+
+  public Object getByUuid(String uuid) {
+    User user = new User();
+    user.setUuid(uuid);
+
+    try {
+      this.query = "SELECT * FROM _user WHERE uuid = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setString(1, user.getUuid());
+      this.rsltSet = this.stmnt.executeQuery();
+
+      if (this.rsltSet.next()) {
+        user.setId(this.rsltSet.getInt("id"));
+        user.setName(this.rsltSet.getString("name"));
+        user.setEmail(this.rsltSet.getString("email"));
+        user.setDescription(this.rsltSet.getString("description"));
+        user.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        user.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
       } else {
         return null;
       }
@@ -130,14 +156,8 @@ public class UserDAO implements DAO {
         user.setName(this.rsltSet.getString("name"));
         user.setEmail(this.rsltSet.getString("email"));
         user.setDescription(this.rsltSet.getString("description"));
-
-        Image pfpImg = new Image();
-        pfpImg.setId(this.rsltSet.getInt("pfp_img_id"));
-        user.setPfp(pfpImg);
-
-        Image headerImg = new Image();
-        headerImg.setId(this.rsltSet.getInt("header_img_id"));
-        user.setHeader(headerImg);
+        user.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        user.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
 
         users.add(user);
       }

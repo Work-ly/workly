@@ -103,6 +103,12 @@ public class UserController {
   public Route get = (request, response) -> {
     response.type("application/json");
 
+    Message result = this.auth(request.headers("Authorization"));
+    if (!result.getType().equals("INFO")) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+      return gson.toJson(result, Message.class);
+    }
+
     String userName = request.params(":name");
     if (userName == null || "".equals(userName)) {
       System.out.println("Could not get user - Invalid username given");
@@ -120,10 +126,8 @@ public class UserController {
     }
 
     ImageDAO imgDAO = new ImageDAO(this.dbConn);
-    int pfpImgId = user.getPfp().getId();
-    int headerImgId = user.getHeader().getId();
-    user.setPfp((Image)imgDAO.get(pfpImgId));
-    user.setHeader((Image)imgDAO.get(headerImgId));
+    user.setPfp((Image)imgDAO.get(user.getPfp().getId()));
+    user.setHeader((Image)imgDAO.get(user.getHeader().getId()));
 
     return gson.toJson(user, User.class);
   };
@@ -141,15 +145,8 @@ public class UserController {
     ArrayList<User> users = (ArrayList<User>)userDAO.getAll();
 
     String resp = "{ \"users\": [";
-    ImageDAO imgDAO = new ImageDAO(this.dbConn);
     for (int i = 0; i < users.size(); ++i) {
       User user = users.get(i);
-
-      int pfpImgId = user.getPfp().getId();
-      int headerImgId = user.getHeader().getId();
-      user.setPfp((Image)imgDAO.get(pfpImgId));
-      user.setHeader((Image)imgDAO.get(headerImgId));
-
       resp += gson.toJson(user, User.class);
 
       if (i < users.size() - 1) {
@@ -164,12 +161,6 @@ public class UserController {
   public Route delete = (request, response) -> {
     response.type("application/json");
 
-    Message result = this.auth(request.headers("Authorization"));
-    if (!result.getType().equals("INFO")) {
-      response.status(HttpStatus.UNAUTHORIZED_401);
-      return gson.toJson(result, Message.class);
-    }
-
     String idToken = request.headers("Authorization").replace("Bearer ", "");
     FirebaseUser fbUser = this.fbHndlr.auth(idToken);
     if (fbUser == null) {
@@ -177,10 +168,7 @@ public class UserController {
 
       return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
     }
-    fbUser.setIdToken(idToken);
-
-    User user = new User();
-    user.setUuid(fbUser.getLocalId());
+    fbUser.setIdToken(idToken);;
 
     boolean status = this.fbHndlr.delete(fbUser);
     if (!status) {
@@ -189,6 +177,7 @@ public class UserController {
     }
 
     UserDAO userDAO = new UserDAO(this.dbConn);
+    User user = (User)userDAO.getByUuid(fbUser.getLocalId());
     status = userDAO.delete(user);
     if (!status) {
       response.status(HttpStatus.FAILED_DEPENDENCY_424);
@@ -196,7 +185,12 @@ public class UserController {
       return gson.toJson(new Message("ERROR", "Could not delete user"), Message.class);
     }
 
-    // TODO(J0sueTM): delete images
+    ImageDAO imgDAO = new ImageDAO(this.dbConn);
+    status = imgDAO.delete(user.getPfp()) && imgDAO.delete(user.getHeader());
+
+    if (!status) {
+      return gson.toJson(new Message("INFO", "Deleted user but could not delete user images"), Message.class);
+    }
 
     return gson.toJson(new Message("INFO", "Deleted user successfully"), Message.class);
   };

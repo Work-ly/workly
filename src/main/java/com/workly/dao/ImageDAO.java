@@ -71,8 +71,7 @@ public class ImageDAO implements DAO {
 
   @Override
   public Object get(Object obj) {
-    Image img = new Image();
-    img.setId((int)obj);
+    Image img = new Image((int)obj);
 
     try {
       this.query = "SELECT type, encode(data, 'base64'), width, height, offset_x, offset_y FROM _img WHERE id = ?;";
@@ -107,6 +106,19 @@ public class ImageDAO implements DAO {
 
   @Override
   public boolean delete(Object obj) {
-    return false;
+    Image img = (Image)obj;
+
+    try {
+      this.query = "DELETE FROM _img WHERE id = ?;";
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setInt(1, img.getId());
+      this.stmnt.executeUpdate();
+    } catch (Exception e) {
+      System.out.println("Could not delete image from database - " + e.getMessage());
+
+      return false;
+    }
+
+    return true;
   }
 }

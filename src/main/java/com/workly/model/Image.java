@@ -27,6 +27,10 @@ public class Image {
   public Image() {
   }
 
+  public Image(int id) {
+    this.id = id;
+  }
+
   public Image(int id, String type, String data, int width, int height, int offsetX, int offsetY) {
     this.id = id;
     this.type = type;

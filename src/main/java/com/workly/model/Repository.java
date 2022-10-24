@@ -10,17 +10,17 @@ import com.google.gson.annotations.SerializedName;
 public class Repository {
     @SerializedName("id")
     private int id;
-    @SerializedName("uuid")
-    private String uuid;
+    @SerializedName("project")
+    private Project project;
     @SerializedName("upstream")
     private String upstream;
 
     public Repository() {
     }
 
-    public Repository(int id, String uuid, String upstream) {
+    public Repository(int id, Project project, String upstream) {
         this.id = id;
-        this.uuid = uuid;
+        this.project = project;
         this.upstream = upstream;
     }
 
@@ -32,12 +32,12 @@ public class Repository {
         this.id = id;
     }
 
-    public String getUuid() {
-        return uuid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public String getUpstream() {

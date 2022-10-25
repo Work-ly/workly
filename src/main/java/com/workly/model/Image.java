@@ -9,18 +9,25 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Image {
+  /* id */
   @SerializedName("id")
   private int id;
+  /* type */
   @SerializedName("type")
   private String type;
+  /* data */
   @SerializedName("data")
   private String data;
+  /* width */
   @SerializedName("width")
   private int width;
+  /* height */
   @SerializedName("height")
   private int height;
+  /* offsetX */
   @SerializedName("offset_x")
   private int offsetX;
+  /* offsetY */
   @SerializedName("offset_y")
   private int offsetY;
 

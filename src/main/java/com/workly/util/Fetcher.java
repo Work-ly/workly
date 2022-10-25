@@ -15,6 +15,7 @@ import java.net.URL;
 import org.eclipse.jetty.http.HttpStatus;
 
 public class Fetcher {
+  /* host */
   private String host;
   
   public Fetcher(String host) {

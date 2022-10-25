@@ -16,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO implements DAO {
-  private final Connection dbConn;
+/* dbConn */
+  private Connection dbConn;
 
+  /* query */
   private String query;
+  /* stmnt */
   private PreparedStatement stmnt;
+  /* rsltSet */
   private ResultSet rsltSet;
 
   public UserDAO(Connection dbConn) {

@@ -13,11 +13,15 @@ import java.util.List;
 
 public class ProjectDAO implements DAO {
 
-    private Connection dbConn;
+    /* dbConn */
+  private Connection dbConn;
 
-    private String query;
-    private PreparedStatement stmnt;
-    private ResultSet rsltSet;
+  /* query */
+  private String query;
+  /* stmnt */
+  private PreparedStatement stmnt;
+  /* rsltSet */
+  private ResultSet rsltSet;
 
     public ProjectDAO(Connection dbConn) {
         this.dbConn = dbConn;

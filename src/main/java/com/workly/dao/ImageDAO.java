@@ -14,10 +14,14 @@ import java.sql.ResultSet;
 import java.util.List;
 
 public class ImageDAO implements DAO {
+  /* dbConn */
   private Connection dbConn;
 
+  /* query */
   private String query;
+  /* stmnt */
   private PreparedStatement stmnt;
+  /* rsltSet */
   private ResultSet rsltSet;
 
   public ImageDAO(Connection dbConn) {

@@ -9,18 +9,25 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class FirebaseUser {
+  /* kind */
   @SerializedName("kind")
   private String kind;
+  /* idToken */
   @SerializedName("idToken")
   private String idToken;
+  /* pfp */
   @SerializedName("photoUrl")
   private String pfp;
+  /* email */
   @SerializedName("email")
   private String email;
+  /* refreshToken */
   @SerializedName("refreshToken")
   private String refreshToken;
+  /* expiresIn */
   @SerializedName("expiresIn")
   private String expiresIn;
+  /* localId */
   @SerializedName("localId")
   private String localId;
 

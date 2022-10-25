@@ -18,8 +18,11 @@ import org.jetbrains.annotations.NotNull;
 import spark.Route;
 
 public class TeamController {
+  /* gson */
   private Gson gson = new Gson();
+  /* dbConn */
   private Connection dbConn;
+  /* userHndlr */
   private Fetcher userHndlr;
 
   public TeamController(@NotNull Connection dbConn) {

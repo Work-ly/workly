@@ -9,22 +9,31 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+  /* id */
   @SerializedName("id")
   private int id;
+  /* uuid */
   @SerializedName("uuid")
   private String uuid;
+  /* name */
   @SerializedName("name")
   private String name;
+  /* email */
   @SerializedName("email")
   private String email;
+  /* description */
   @SerializedName("description")
   private String description;
+  /* password */
   @SerializedName("password")
   private String password;
+  /* pfp */
   @SerializedName("pfp")
   private Image pfp;
+  /* header */
   @SerializedName("header")
   private Image header;
+  /* returnSecureToken */
   @SerializedName("returnSecureToken")
   private boolean returnSecureToken;
 

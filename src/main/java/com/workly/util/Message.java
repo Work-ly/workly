@@ -9,9 +9,10 @@ package com.workly.util;
 import com.google.gson.annotations.SerializedName;
 
 public class Message {
+  /* type  */
   @SerializedName("type")
   private String type;
-
+  /* msg */
   @SerializedName("message")
   private String msg;
 

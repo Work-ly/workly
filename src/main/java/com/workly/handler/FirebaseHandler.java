@@ -24,7 +24,9 @@ import com.workly.util.Message;
 import com.workly.util.MicroserviceConfig;
 
 public class FirebaseHandler {
+  /* gson */
   public Gson gson = new Gson();
+  /* fbCfg */
   public MicroserviceConfig fbCfg;
 
   public FirebaseHandler(MicroserviceConfig fbCfg) {

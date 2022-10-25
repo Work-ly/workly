@@ -26,8 +26,11 @@ import spark.Route;
 import spark.Spark;
 
 public class UserController {
+  /* gson */
   private Gson gson = new Gson();
+  /* fbHndlr */
   private FirebaseHandler fbHndlr;
+  /* dbConn */
   private Connection dbConn;
 
   public UserController(@NotNull FirebaseHandler fbHndlr, @NotNull Connection dbConn) {

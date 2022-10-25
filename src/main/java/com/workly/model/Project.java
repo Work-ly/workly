@@ -8,10 +8,13 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Project {
+    /* id */
     @SerializedName("id")
     private int id;
+    /* name */
     @SerializedName("name")
     private String name;
+    /* description */
     @SerializedName("description")
     private String description;
 

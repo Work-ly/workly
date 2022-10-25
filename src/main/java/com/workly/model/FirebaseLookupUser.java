@@ -9,6 +9,7 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class FirebaseLookupUser {
+  /* users */
   @SerializedName("users")
   private FirebaseUser[] users;
 

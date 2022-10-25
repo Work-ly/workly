@@ -9,14 +9,19 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Document {
+  /* id */
   @SerializedName("id")
   private int id;
+  /* title */
   @SerializedName("title")
   private String title;
+  /* content */
   @SerializedName("content")
   private String content;
+  /* user */
   @SerializedName("user")
   private User user;
+  /* project */
   @SerializedName("project")
   private Project project;
 

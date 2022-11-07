@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO implements DAO {
-/* dbConn */
+  /* dbConn */
   private Connection dbConn;
-
   /* query */
   private String query;
   /* stmnt */

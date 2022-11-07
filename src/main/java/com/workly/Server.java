@@ -28,13 +28,13 @@ public class Server {
 
     setupBefores();
 
-    UserController usrCntrllr = new UserController(fbHndlr, dbSrv.getConn());
+    UserController usrCntrllr = new UserController(dbSrv.getConn(), fbHndlr);
     Spark.post("/user", "application/json", usrCntrllr.create);
     Spark.get("/user/:name", "application/json", usrCntrllr.get);
     Spark.get("/users", "application/json", usrCntrllr.getAll);
     Spark.delete("/user", "application/json", usrCntrllr.delete);
 
-    TeamController teamController = new TeamController(dbSrv.getConn());
+    TeamController teamController = new TeamController(dbSrv.getConn(), fbHndlr);
     Spark.post("/team", "application/json", teamController.create);
 
     System.out.println("Server running - http://localhost:" + cfg.getPort());

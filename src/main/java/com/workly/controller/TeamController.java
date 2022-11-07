@@ -9,7 +9,12 @@ package com.workly.controller;
 import com.google.gson.Gson;
 import com.workly.dao.ImageDAO;
 import com.workly.dao.TeamDAO;
+import com.workly.dao.UserDAO;
+import com.workly.dao.UserTeamDAO;
+import com.workly.handler.FirebaseHandler;
+import com.workly.model.FirebaseUser;
 import com.workly.model.Team;
+import com.workly.model.User;
 import com.workly.util.Fetcher;
 import com.workly.util.Message;
 import java.sql.Connection;
@@ -22,20 +27,24 @@ public class TeamController {
   private Gson gson = new Gson();
   /* dbConn */
   private Connection dbConn;
-  /* userHndlr */
-  private Fetcher userHndlr;
+  /* fbHndlr */
+  private FirebaseHandler fbHndlr;
 
-  public TeamController(@NotNull Connection dbConn) {
+  public TeamController(@NotNull Connection dbConn, @NotNull FirebaseHandler fbHndlr) {
     this.dbConn = dbConn;
-    this.userHndlr = new Fetcher("");
+    this.fbHndlr = fbHndlr;
   }
   
   public Route create = (request, response) -> {
     response.type("application/json");
-    
-    Message err = this.userHndlr.fetch("POST", "/user/auth", "");
-    if (err.getType() != "INFO")
-      return gson.toJson(err, Message.class);
+
+    String idToken = request.headers("Authorization").replace("Bearer ", "");
+    FirebaseUser fbUser = this.fbHndlr.auth(idToken);
+    if (fbUser == null) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+
+      return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
+    }
 
     Team team = gson.fromJson(request.body(), Team.class);
     if (team == null) {
@@ -64,12 +73,16 @@ public class TeamController {
     int teamId = teamDAO.create(team);
     if (teamId <= 0) {
       response.status(HttpStatus.FAILED_DEPENDENCY_424);
-      
+
       return gson.toJson(new Message("ERROR", "Could not create team - [internal]"));
     }
-    
     team.setId(teamId);
-    
+
+    UserDAO userDAO = new UserDAO(dbConn);
+    User user = (User)userDAO.getByUuid(fbUser.getLocalId());
+
+    UserTeamDAO userTeamDAO = new UserTeamDAO(dbConn);
+
     response.status(HttpStatus.OK_200);
     return gson.toJson(team, Team.class);
   };

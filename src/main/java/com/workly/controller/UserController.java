@@ -33,9 +33,9 @@ public class UserController {
   /* dbConn */
   private Connection dbConn;
 
-  public UserController(@NotNull FirebaseHandler fbHndlr, @NotNull Connection dbConn) {
-    this.fbHndlr = fbHndlr;
+  public UserController(@NotNull Connection dbConn, @NotNull FirebaseHandler fbHndlr) {
     this.dbConn = dbConn;
+    this.fbHndlr = fbHndlr;
   }
 
   public Message auth(String idToken) {
@@ -171,7 +171,7 @@ public class UserController {
 
       return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
     }
-    fbUser.setIdToken(idToken);;
+    fbUser.setIdToken(idToken);
 
     boolean status = this.fbHndlr.delete(fbUser);
     if (!status) {

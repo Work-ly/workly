@@ -21,9 +21,7 @@ import com.workly.model.FirebaseUser;
 import com.workly.model.User;
 import com.workly.util.Message;
 
-import spark.Filter;
 import spark.Route;
-import spark.Spark;
 
 public class UserController {
   /* gson */

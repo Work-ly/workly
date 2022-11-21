@@ -15,7 +15,6 @@ import com.workly.handler.FirebaseHandler;
 import com.workly.model.FirebaseUser;
 import com.workly.model.Team;
 import com.workly.model.User;
-import com.workly.util.Fetcher;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;

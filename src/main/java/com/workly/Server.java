@@ -6,14 +6,10 @@
 
 package com.workly;
 
-import com.google.gson.Gson;
 import com.workly.controller.TeamController;
 import com.workly.controller.UserController;
 import com.workly.handler.FirebaseHandler;
-import com.workly.model.FirebaseUser;
-import com.workly.util.Message;
 import com.workly.util.MicroserviceConfig;
-import org.eclipse.jetty.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import spark.Spark;
 

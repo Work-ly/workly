@@ -33,7 +33,8 @@ public class Server {
     Spark.get("/user/:name", "application/json", usrCntrllr.get);
     Spark.get("/users", "application/json", usrCntrllr.getAll);
     Spark.delete("/user", "application/json", usrCntrllr.delete);
-
+    Spark.post("/user/login", usrCntrllr.login);
+    
     TeamController teamController = new TeamController(dbSrv.getConn(), fbHndlr);
     Spark.post("/team", "application/json", teamController.create);
 

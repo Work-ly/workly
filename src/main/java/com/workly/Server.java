@@ -33,6 +33,7 @@ public class Server {
     
     TeamController teamController = new TeamController(dbSrv.getConn(), fbHndlr);
     Spark.post("/team", "application/json", teamController.create);
+    Spark.post("/team/user/:name", "application/json", teamController.addUser);
 
     System.out.println("Server running - http://localhost:" + cfg.getPort());
   }

@@ -59,12 +59,4 @@ public class UserTeam {
   public void setRole(String role) {
     this.role = role;
   }
-<<<<<<< HEAD
-
-
 }
-=======
-  
-  
-}
->>>>>>> 19392886e20045ab39105287752fad92ffdf518b

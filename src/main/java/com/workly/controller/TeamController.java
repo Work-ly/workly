@@ -12,10 +12,7 @@ import com.workly.dao.TeamDAO;
 import com.workly.dao.UserDAO;
 import com.workly.dao.UserTeamDAO;
 import com.workly.handler.FirebaseHandler;
-import com.workly.model.FirebaseUser;
-import com.workly.model.Team;
-import com.workly.model.User;
-import com.workly.model.UserTeam;
+import com.workly.model.*;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;
@@ -54,20 +51,31 @@ public class TeamController {
     }
 
     ImageDAO imgDAO = new ImageDAO(dbConn);
-    int pfpImgId = imgDAO.create(team.getPfp());
-    if (pfpImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      pfpImgId = 1;
+    int pfpImgId = 1;
+    int headerImgId = 2;
+
+    if (!team.getPfp().getData().equals("")) {
+      pfpImgId = imgDAO.create(team.getPfp());
+      if (pfpImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+        pfpImgId = 1;
+      }
     }
 
-    int headerImgId = imgDAO.create(team.getHeader());
-    if (headerImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      headerImgId = 2;
+    if (!team.getHeader().getData().equals("")) {
+      headerImgId = imgDAO.create(team.getHeader());
+      if (headerImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+        headerImgId = 2;
+      }
     }
 
-    team.getPfp().setId(pfpImgId);
-    team.getHeader().setId(headerImgId);
+    team.setPfp((Image)imgDAO.get(pfpImgId));
+    team.setHeader((Image)imgDAO.get(headerImgId));
+
+    if (team.getDescription().equals("")) {
+      team.setDescription("Hello! We began using Work.ly recently!");
+    }
 
     TeamDAO teamDAO = new TeamDAO(dbConn);
     int teamId = teamDAO.create(team);
@@ -81,9 +89,12 @@ public class TeamController {
     UserDAO userDAO = new UserDAO(dbConn);
     User user = (User)userDAO.getByUuid(fbUser.getLocalId());
 
-    UserTeamDAO utDAO = new UserTeamDAO(dbConn);
     UserTeam ut = new UserTeam();
     ut.setUser(user);
+    ut.setTeam(team);
+    ut.setRole("owner");
+
+    UserTeamDAO utDAO = new UserTeamDAO(dbConn);
     ut.setId(utDAO.create(ut));
     if (ut.getId() <= 0) {
       response.status(HttpStatus.CREATED_201);
@@ -97,6 +108,14 @@ public class TeamController {
   public Route get = (request, response) -> {
     response.type("application/json");
 
+    String idToken = request.headers("Authorization").replace("Bearer ", "");
+    FirebaseUser fbUser = this.fbHndlr.auth(idToken);
+    if (fbUser == null) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+
+      return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
+    }
+
     response.status(HttpStatus.OK_200);
     return gson.toJson(new Message("INFO", "Got it"), Message.class);
   };
@@ -104,12 +123,28 @@ public class TeamController {
   public Route update = (request, response) -> {
     response.type("application/json");
 
+    String idToken = request.headers("Authorization").replace("Bearer ", "");
+    FirebaseUser fbUser = this.fbHndlr.auth(idToken);
+    if (fbUser == null) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+
+      return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
+    }
+
     response.status(HttpStatus.OK_200);
     return gson.toJson(new Message("INFO", "Updated"), Message.class);
   };
 
   public Route delete = (request, response) -> {
     response.type("application/json");
+
+    String idToken = request.headers("Authorization").replace("Bearer ", "");
+    FirebaseUser fbUser = this.fbHndlr.auth(idToken);
+    if (fbUser == null) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+
+      return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
+    }
 
     response.status(HttpStatus.OK_200);
     return gson.toJson(new Message("INFO", "Deleted"), Message.class);

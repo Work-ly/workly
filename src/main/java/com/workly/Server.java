@@ -42,8 +42,8 @@ public class Server {
     Spark.delete("/team/:name", "application/json", teamCntrllr.delete);
 
     Spark.post("/team/user", "application/json", utCntrllr.create);
-    Spark.get("/team/:name/users", "application/json", utCntrllr.getByTeam);
-    Spark.get("/user/:name/teams", "application/json", utCntrllr.getByUser);
+    Spark.get("/team/:name/users", "application/json", utCntrllr.getUsersByTeam);
+    Spark.get("/user/:name/teams", "application/json", utCntrllr.getTeamsByUser);
     Spark.put("/team/user/:name", "application/json", utCntrllr.update);
     Spark.delete("/team/user/:name", "application/json", utCntrllr.delete);
 

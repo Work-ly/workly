@@ -109,6 +109,37 @@ public class UserDAO implements DAO {
     return user;
   }
 
+  public Object getById(int id) {
+    User user = new User();
+
+    try {
+      this.query = "SELECT * FROM _user WHERE id = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setInt(1, id);
+      this.rsltSet = this.stmnt.executeQuery();
+
+      if (this.rsltSet.next()) {
+        user.setId(this.rsltSet.getInt("id"));
+        user.setName(this.rsltSet.getString("name"));
+        user.setEmail(this.rsltSet.getString("email"));
+        user.setDescription(this.rsltSet.getString("description"));
+        user.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        user.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
+      } else {
+        return null;
+      }
+
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not get user - " + e.getMessage());
+
+      return null;
+    }
+
+    return user;
+  }
+
   public Object getByUuid(String uuid) {
     User user = new User();
 

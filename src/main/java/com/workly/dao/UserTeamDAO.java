@@ -6,6 +6,7 @@
 
 package com.workly.dao;
 
+import com.workly.model.UserTeam;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,39 @@ public class UserTeamDAO implements DAO {
 
   @Override
   public int create(Object obj) {
-    return 0;
+    UserTeam ut = (UserTeam)obj;
+
+    try {
+      this.query =
+        "INSERT INTO _user_team (\n"
+          + "  _user_id,\n"
+          + "  _team_id,\n"
+          + "  _role\n"
+          + ") values (\n"
+          + "  ?,\n"
+          + "  ?,\n"
+          + "  ?\n"
+          + ") RETURNING id;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setInt(1, ut.getUser().getId());
+      this.stmnt.setInt(2, ut.getTeam().getId());
+      this.stmnt.setString(3, ut.getRole());
+      this.rsltSet = this.stmnt.executeQuery();
+
+      if (this.rsltSet.next()) {
+        ut.setId(this.rsltSet.getInt("id"));
+      }
+
+      this.stmnt.close();
+      this.rsltSet.close();
+    } catch (Exception e) {
+      System.out.println("Could not create user team on database - " + e.getMessage());
+
+      return -1;
+    }
+
+    return ut.getId();
   }
 
   @Override

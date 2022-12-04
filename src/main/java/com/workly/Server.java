@@ -6,14 +6,10 @@
 
 package com.workly;
 
-import com.google.gson.Gson;
 import com.workly.controller.TeamController;
 import com.workly.controller.UserController;
 import com.workly.handler.FirebaseHandler;
-import com.workly.model.FirebaseUser;
-import com.workly.util.Message;
 import com.workly.util.MicroserviceConfig;
-import org.eclipse.jetty.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import spark.Spark;
 
@@ -33,9 +29,11 @@ public class Server {
     Spark.get("/user/:name", "application/json", usrCntrllr.get);
     Spark.get("/users", "application/json", usrCntrllr.getAll);
     Spark.delete("/user", "application/json", usrCntrllr.delete);
+    Spark.post("/user/login", usrCntrllr.login);
 
     TeamController teamController = new TeamController(dbSrv.getConn(), fbHndlr);
     Spark.post("/team", "application/json", teamController.create);
+    Spark.post("/team/user/:name", "application/json", teamController.addUser);
 
     System.out.println("Server running - http://localhost:" + cfg.getPort());
   }

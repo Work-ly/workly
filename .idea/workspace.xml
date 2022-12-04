@@ -5,13 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e1f9bba-27fa-4e73-a8eb-4853cb8f96ed" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/UserTeamDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/workly/model/UserTeam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/controller/TeamController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/controller/TeamController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/dao/RepositoryDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/RepositoryDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/dao/ImageDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/ImageDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/dao/TeamDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/TeamDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/dao/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/UserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/dao/UserTeamDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/dao/UserTeamDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/handler/FirebaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/handler/FirebaseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/model/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/model/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/workly/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/workly/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

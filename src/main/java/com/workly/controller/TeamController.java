@@ -15,7 +15,7 @@ import com.workly.handler.FirebaseHandler;
 import com.workly.model.FirebaseUser;
 import com.workly.model.Team;
 import com.workly.model.User;
-import com.workly.util.Fetcher;
+import com.workly.model.UserTeam;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;
@@ -34,7 +34,7 @@ public class TeamController {
     this.dbConn = dbConn;
     this.fbHndlr = fbHndlr;
   }
-  
+
   public Route create = (request, response) -> {
     response.type("application/json");
 
@@ -49,26 +49,26 @@ public class TeamController {
     Team team = gson.fromJson(request.body(), Team.class);
     if (team == null) {
       response.status(HttpStatus.BAD_REQUEST_400);
-      
+
       return gson.toJson(new Message("ERROR", "Could not create team - [internal]"), Message.class);
     }
-    
+
     ImageDAO imgDAO = new ImageDAO(dbConn);
     int pfpImgId = imgDAO.create(team.getPfp());
     if (pfpImgId <= 0) {
       response.status(HttpStatus.CREATED_201);
       pfpImgId = 1;
     }
-    
+
     int headerImgId = imgDAO.create(team.getHeader());
     if (headerImgId <= 0) {
       response.status(HttpStatus.CREATED_201);
       headerImgId = 2;
     }
-    
+
     team.getPfp().setId(pfpImgId);
     team.getHeader().setId(headerImgId);
-    
+
     TeamDAO teamDAO = new TeamDAO(dbConn);
     int teamId = teamDAO.create(team);
     if (teamId <= 0) {
@@ -81,9 +81,38 @@ public class TeamController {
     UserDAO userDAO = new UserDAO(dbConn);
     User user = (User)userDAO.getByUuid(fbUser.getLocalId());
 
+    // TODO(J0sueTM): Add created team to current user
     UserTeamDAO userTeamDAO = new UserTeamDAO(dbConn);
 
     response.status(HttpStatus.OK_200);
     return gson.toJson(team, Team.class);
+  };
+
+  public Route addUser = (request, response) -> {
+    response.type("application/json");
+
+    UserTeam ut = gson.fromJson(request.body(), UserTeam.class);
+    ut.setUser(new User());
+    ut.getUser().setName(request.params(":name"));
+    if (!ut.getRole().equals("owner") && !ut.getRole().equals("member")) {
+      response.status(HttpStatus.BAD_REQUEST_400);
+      return gson.toJson(new Message("ERROR", "Could not add user to team - Invalid role"));
+    }
+
+    UserDAO userDAO = new UserDAO(this.dbConn);
+    ut.setUser((User)userDAO.get(ut.getUser().getName()));
+    if (ut.getUser() == null) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+      return gson.toJson(new Message("ERROR", "Could not add user to team - [internal]"));
+    }
+
+    UserTeamDAO utDAO = new UserTeamDAO(this.dbConn);
+    ut.setId(utDAO.create(ut));
+    if (ut.getId() <= 0) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+      return gson.toJson(new Message("ERROR", "Could not add user to team - [internal]"));
+    }
+
+    return gson.toJson(ut, UserTeam.class);
   };
 }

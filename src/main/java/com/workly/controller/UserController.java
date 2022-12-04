@@ -21,9 +21,7 @@ import com.workly.model.FirebaseUser;
 import com.workly.model.User;
 import com.workly.util.Message;
 
-import spark.Filter;
 import spark.Route;
-import spark.Spark;
 
 public class UserController {
   /* gson */
@@ -52,6 +50,40 @@ public class UserController {
     return new Message("INFO", "User authorized");
   }
 
+  public Route login = (request, response) -> {
+    response.type("application/json");
+
+    User user = this.gson.fromJson(request.body(), User.class);
+    FirebaseUser fbUser = fbHndlr.login(user);
+    if (fbUser == null) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+      return gson.toJson(new Message("ERROR", "Could not login user on firebase"), Message.class);
+    }
+
+    UserDAO userDAO = new UserDAO(this.dbConn);
+
+    user = (User)userDAO.getByUuid(fbUser.getLocalId());
+    if (user == null) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+
+      return gson.toJson(new Message("ERROR", "Could not login user"));
+    }
+
+    ImageDAO imgDAO = new ImageDAO(this.dbConn);
+    user.setPfp((Image)imgDAO.get(user.getPfp().getId()));
+    user.setHeader((Image)imgDAO.get(user.getHeader().getId()));
+
+    user.setPassword("");
+    String resp = "{\n\"wly_user\": "
+      + gson.toJson(user)
+      + ",\n\"firebase_user\": "
+      + gson.toJson(fbUser)
+      + "\n}";
+    response.status(HttpStatus.OK_200);
+
+    return resp;
+  };
+
   public Route create = (request, response) -> {
     response.type("application/json");
 
@@ -67,20 +99,30 @@ public class UserController {
     }
 
     ImageDAO imgDAO = new ImageDAO(dbConn);
-    int pfpImgId = imgDAO.create(user.getPfp());
-    if (pfpImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      pfpImgId = 1;
+    int pfpImgId = 1;
+    int headerImgId = 2;
+
+    if (user.getPfp().getData().equals("")) {
+      user.setPfp((Image)imgDAO.get(pfpImgId));
+    } else {
+      pfpImgId = imgDAO.create(user.getPfp());
+      if (pfpImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+      }
+
+      user.getPfp().setId(pfpImgId);
     }
 
-    int headerImgId = imgDAO.create(user.getHeader());
-    if (headerImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      headerImgId = 2;
-    }
+    if (user.getHeader().getData().equals("")) {
+      user.setHeader((Image)imgDAO.get(headerImgId));
+    } else {
+      headerImgId = imgDAO.create(user.getHeader());
+      if (headerImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+      }
 
-    user.getPfp().setId(pfpImgId);
-    user.getHeader().setId(headerImgId);
+      user.getHeader().setId(headerImgId);
+    }
 
     user.setUuid(fbUser.getLocalId());
     UserDAO userDAO = new UserDAO(dbConn);

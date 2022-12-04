@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.util.List;
 
 public class TeamDAO implements DAO {
-/* dbConn */
+  /* dbConn */
   private Connection dbConn;
 
   /* query */
@@ -32,17 +32,17 @@ public class TeamDAO implements DAO {
 
     try {
       this.query
-              = "INSERT INTO _team (\n"
-              + "  name,\n"
-              + "  description,\n"
-              + "  pfp_img_id,\n"
-              + "  header_img_id\n"
-              + ") VALUES (\n"
-              + "  ?,\n"
-              + "  ?,\n"
-              + "  ?,\n"
-              + "  ?\n"
-              + ") RETURNING id;";
+        = "INSERT INTO _team (\n"
+        + "  name,\n"
+        + "  description,\n"
+        + "  pfp_img_id,\n"
+        + "  header_img_id\n"
+        + ") VALUES (\n"
+        + "  ?,\n"
+        + "  ?,\n"
+        + "  ?,\n"
+        + "  ?\n"
+        + ") RETURNING id;";
 
       this.stmnt = this.dbConn.prepareStatement(this.query);
       this.stmnt.setString(1, team.getName());

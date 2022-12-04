@@ -6,15 +6,6 @@
 
 package com.workly.handler;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.eclipse.jetty.http.HttpStatus;
-
 import com.google.gson.Gson;
 import com.workly.model.FirebaseLookupUser;
 import com.workly.model.FirebaseUser;
@@ -35,10 +26,25 @@ public class FirebaseHandler {
 
   public Message fetch(String uri, String method, String reqBody) {
     String newUri = uri + "?key=" + this.fbCfg.getExtraConfigs().get("api_key");
-    
+
     Fetcher fetcher = new Fetcher(this.fbCfg.getHost());
-    
+
     return fetcher.fetch(method, newUri, reqBody);
+  }
+
+  public FirebaseUser login(User user) {
+    String reqBody = gson.toJson(user, User.class);
+
+    Message status = this.fetch("/accounts:signInWithPassword", "POST", reqBody);
+    if (status.getType() != "INFO") {
+      System.out.println("Could not login user on firebase - " + status.getMsg());
+
+      return null;
+    }
+
+    FirebaseUser fbUser = gson.fromJson(status.getMsg(), FirebaseUser.class);
+
+    return fbUser;
   }
 
   public FirebaseUser create(FirebaseUser fbUser, User user) {

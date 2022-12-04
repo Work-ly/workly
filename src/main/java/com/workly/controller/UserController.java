@@ -99,30 +99,20 @@ public class UserController {
     }
 
     ImageDAO imgDAO = new ImageDAO(dbConn);
-    int pfpImgId = 1;
-    int headerImgId = 2;
-
-    if (user.getPfp().getData().equals("")) {
-      user.setPfp((Image)imgDAO.get(pfpImgId));
-    } else {
-      pfpImgId = imgDAO.create(user.getPfp());
-      if (pfpImgId <= 0) {
-        response.status(HttpStatus.CREATED_201);
-      }
-
-      user.getPfp().setId(pfpImgId);
+    int pfpImgId = imgDAO.create(user.getPfp());
+    if (pfpImgId <= 0) {
+      response.status(HttpStatus.CREATED_201);
+      pfpImgId = 1;
     }
 
-    if (user.getHeader().getData().equals("")) {
-      user.setHeader((Image)imgDAO.get(headerImgId));
-    } else {
-      headerImgId = imgDAO.create(user.getHeader());
-      if (headerImgId <= 0) {
-        response.status(HttpStatus.CREATED_201);
-      }
-
-      user.getHeader().setId(headerImgId);
+    int headerImgId = imgDAO.create(user.getHeader());
+    if (headerImgId <= 0) {
+      response.status(HttpStatus.CREATED_201);
+      headerImgId = 2;
     }
+
+    user.getPfp().setId(pfpImgId);
+    user.getHeader().setId(headerImgId);
 
     user.setUuid(fbUser.getLocalId());
     UserDAO userDAO = new UserDAO(dbConn);
@@ -201,6 +191,66 @@ public class UserController {
     resp += "]\n}";
 
     return resp;
+  };
+
+  public Route update = (request, response) -> {
+    response.type("application/json");
+
+    String idToken = request.headers("Authorization").replace("Bearer ", "");
+    FirebaseUser fbUser = this.fbHndlr.auth(idToken);
+    if (fbUser == null) {
+      response.status(HttpStatus.UNAUTHORIZED_401);
+
+      return gson.toJson(new Message("ERROR", "Invalid authorization token"), Message.class);
+    }
+
+    UserDAO userDAO = new UserDAO(dbConn);
+    User oldUser = (User)userDAO.getByUuid(fbUser.getLocalId());
+    if (oldUser == null) {
+      response.status(HttpStatus.BAD_REQUEST_400);
+
+      return gson.toJson(new Message("ERROR", "Could not find user to update"), Message.class);
+    }
+
+    User newUser = gson.fromJson(request.body(), User.class);
+    if (newUser == null) {
+      response.status(HttpStatus.BAD_REQUEST_400);
+
+      return gson.toJson(new Message("ERROR", "Invalid new user data"));
+    }
+    newUser.setId(oldUser.getId());
+    newUser.setName((newUser.getName() == null || newUser.getName().equals("") ? oldUser.getName() : newUser.getName()));
+    newUser.setDescription((newUser.getDescription() == null || newUser.getDescription().equals("")) ? oldUser.getDescription() : newUser.getDescription());
+
+    newUser.setPfp((newUser.getPfp() == null) ? oldUser.getPfp() : newUser.getPfp());
+    newUser.getPfp().setId(oldUser.getPfp().getId());
+
+    newUser.setHeader((newUser.getHeader() == null) ? oldUser.getHeader() : newUser.getHeader());
+    newUser.getHeader().setId(oldUser.getHeader().getId());
+
+    boolean updated = userDAO.update(newUser);
+    if (!updated) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+
+      return gson.toJson(new Message("ERROR", "Could not update user on db"));
+    }
+
+    ImageDAO imgDAO = new ImageDAO(dbConn);
+    updated = imgDAO.update(newUser.getPfp());
+    if (!updated) {
+      response.status(HttpStatus.CREATED_201);
+
+      return gson.toJson(new Message("ERROR", "Could not update user's pfp on db"));
+    }
+
+    updated = imgDAO.update(newUser.getHeader());
+    if (!updated) {
+      response.status(HttpStatus.CREATED_201);
+
+      return gson.toJson(new Message("ERROR", "Could not update user's header on db"));
+    }
+
+    return gson.toJson(newUser, User.class);
   };
 
   public Route delete = (request, response) -> {

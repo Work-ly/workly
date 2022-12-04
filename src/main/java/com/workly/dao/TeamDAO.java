@@ -5,6 +5,7 @@
  */
 package com.workly.dao;
 
+import com.workly.model.Image;
 import com.workly.model.Team;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,6 +57,8 @@ public class TeamDAO implements DAO {
       } else {
         return -1;
       }
+
+      this.stmnt.close();
     } catch (Exception e) {
       System.out.println("Could not create team on database - " + e.getMessage());
 
@@ -67,21 +70,113 @@ public class TeamDAO implements DAO {
 
   @Override
   public Object get(Object obj) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    String teamName = (String)obj;
+    Team team = new Team();
+
+    try {
+      this.query = "SELECT * FROM _team WHERE name = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setString(1, teamName);
+      this.rsltSet = this.stmnt.executeQuery();
+
+      if (this.rsltSet.next()) {
+        team.setId(this.rsltSet.getInt("id"));
+        team.setName(this.rsltSet.getString("name"));
+        team.setDescription(this.rsltSet.getString("description"));
+        team.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        team.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
+      } else {
+        return null;
+      }
+
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not get team - " + e.getMessage());
+
+      return null;
+    }
+
+    return team;
+  }
+
+  public Object getById(int id) {
+    Team team = new Team();
+    team.setId(id);
+
+    try {
+      this.query = "SELECT * FROM _team WHERE id = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setInt(1, id);
+      this.rsltSet = this.stmnt.executeQuery();
+
+      if (this.rsltSet.next()) {
+        team.setId(this.rsltSet.getInt("id"));
+        team.setName(this.rsltSet.getString("name"));
+        team.setDescription(this.rsltSet.getString("description"));
+        team.setPfp(new Image(this.rsltSet.getInt("pfp_img_id")));
+        team.setHeader(new Image(this.rsltSet.getInt("header_img_id")));
+      } else {
+        return null;
+      }
+
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not get team - " + e.getMessage());
+
+      return null;
+    }
+
+    return team;
   }
 
   @Override
   public List<?> getAll() {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return null;
   }
 
   @Override
   public boolean update(Object obj) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    Team team = (Team)obj;
+
+    try {
+      this.query = "UPDATE _team SET name = ?, description = ? WHERE id = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setString(1, team.getName());
+      this.stmnt.setString(2, team.getDescription());
+      this.stmnt.setInt(3, team.getId());
+      this.stmnt.executeUpdate();
+
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not update team - " + e.getMessage());
+
+      return false;
+    }
+
+    return true;
   }
 
   @Override
   public boolean delete(Object obj) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    Team team = (Team)obj;
+
+    try {
+      this.query = "DELETE FROM _team WHERE id = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setInt(1, team.getId());
+      this.stmnt.executeUpdate();
+
+      this.stmnt.close();
+    } catch (Exception e) {
+      System.out.println("Could not delete team from database - " + e.getMessage());
+
+      return false;
+    }
+
+    return true;
   }
 }

@@ -15,7 +15,6 @@ import com.workly.handler.FirebaseHandler;
 import com.workly.model.FirebaseUser;
 import com.workly.model.Team;
 import com.workly.model.User;
-import com.workly.model.UserTeam;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;
@@ -88,31 +87,38 @@ public class TeamController {
     return gson.toJson(team, Team.class);
   };
 
-  public Route addUser = (request, response) -> {
+  public Route get = (request, response) -> {
     response.type("application/json");
 
-    UserTeam ut = gson.fromJson(request.body(), UserTeam.class);
-    ut.setUser(new User());
-    ut.getUser().setName(request.params(":name"));
-    if (!ut.getRole().equals("owner") && !ut.getRole().equals("member")) {
-      response.status(HttpStatus.BAD_REQUEST_400);
-      return gson.toJson(new Message("ERROR", "Could not add user to team - Invalid role"));
-    }
+    response.status(HttpStatus.OK_200);
+    return gson.toJson(new Message("INFO", "Got it"), Message.class);
+  };
 
-    UserDAO userDAO = new UserDAO(this.dbConn);
-    ut.setUser((User)userDAO.get(ut.getUser().getName()));
-    if (ut.getUser() == null) {
-      response.status(HttpStatus.FAILED_DEPENDENCY_424);
-      return gson.toJson(new Message("ERROR", "Could not add user to team - [internal]"));
-    }
+  public Route getByUser = (request, response) -> {
+    response.type("application/json");
 
-    UserTeamDAO utDAO = new UserTeamDAO(this.dbConn);
-    ut.setId(utDAO.create(ut));
-    if (ut.getId() <= 0) {
-      response.status(HttpStatus.FAILED_DEPENDENCY_424);
-      return gson.toJson(new Message("ERROR", "Could not add user to team - [internal]"));
-    }
+    response.status(HttpStatus.OK_200);
+    return gson.toJson(new Message("INFO", "Got them by user"), Message.class);
+  };
 
-    return gson.toJson(ut, UserTeam.class);
+  public Route getByTeam = (request, response) -> {
+    response.type("application/json");
+
+    response.status(HttpStatus.OK_200);
+    return gson.toJson(new Message("INFO", "Got them by team"), Message.class);
+  };
+
+  public Route update = (request, response) -> {
+    response.type("application/json");
+
+    response.status(HttpStatus.OK_200);
+    return gson.toJson(new Message("INFO", "Updated"), Message.class);
+  };
+
+  public Route delete = (request, response) -> {
+    response.type("application/json");
+
+    response.status(HttpStatus.OK_200);
+    return gson.toJson(new Message("INFO", "Deleted"), Message.class);
   };
 }

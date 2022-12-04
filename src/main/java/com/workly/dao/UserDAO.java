@@ -164,6 +164,8 @@ public class UserDAO implements DAO {
 
         users.add(user);
       }
+
+      this.stmnt.close();
     } catch (Exception e) {
       System.out.println("Could not get user - " + e.getMessage());
     }

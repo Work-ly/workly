@@ -123,4 +123,19 @@ public class User {
   public void setReturnSecureToken(boolean returnSecureToken) {
     this.returnSecureToken = returnSecureToken;
   }
+
+  @Override
+  public String toString() {
+    return "User{" +
+      "id=" + id +
+      ", uuid='" + uuid + '\'' +
+      ", name='" + name + '\'' +
+      ", email='" + email + '\'' +
+      ", description='" + description + '\'' +
+      ", password='" + password + '\'' +
+      ", pfp=" + pfp +
+      ", header=" + header +
+      ", returnSecureToken=" + returnSecureToken +
+      '}';
+  }
 }

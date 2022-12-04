@@ -93,6 +93,8 @@ public class ImageDAO implements DAO {
       }
     } catch (Exception e) {
       System.out.println("Could not get image from database - " + e.getMessage());
+
+      return null;
     }
 
     return img;
@@ -105,7 +107,34 @@ public class ImageDAO implements DAO {
 
   @Override
   public boolean update(Object obj) {
-    return false;
+    Image img = (Image)obj;
+
+    try {
+      this.query =
+        "UPDATE _img\n"
+          + "SET type = ?,\n"
+          + "    data = decode(?, 'base64'),\n"
+          + "    width = ?,\n"
+          + "    height = ?,\n"
+          + "    offset_x = ?,\n"
+          + "    offset_y = ?\n"
+          + "WHERE id = ?;";
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setString(1, img.getType());
+      this.stmnt.setString(2, img.getData());
+      this.stmnt.setInt(3, img.getWidth());
+      this.stmnt.setInt(4, img.getHeight());
+      this.stmnt.setInt(5, img.getOffsetX());
+      this.stmnt.setInt(6, img.getOffsetY());
+      this.stmnt.setInt(7, img.getId());
+      this.stmnt.executeUpdate();
+    } catch (Exception e) {
+      System.out.println("Could not update image on database - " + e.getMessage());
+
+      return false;
+    }
+
+    return true;
   }
 
   @Override

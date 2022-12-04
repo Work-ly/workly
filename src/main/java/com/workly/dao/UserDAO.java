@@ -111,13 +111,12 @@ public class UserDAO implements DAO {
 
   public Object getByUuid(String uuid) {
     User user = new User();
-    user.setUuid(uuid);
 
     try {
       this.query = "SELECT * FROM _user WHERE uuid = ?;";
 
       this.stmnt = this.dbConn.prepareStatement(this.query);
-      this.stmnt.setString(1, user.getUuid());
+      this.stmnt.setString(1, uuid);
       this.rsltSet = this.stmnt.executeQuery();
 
       if (this.rsltSet.next()) {
@@ -164,8 +163,6 @@ public class UserDAO implements DAO {
 
         users.add(user);
       }
-
-      this.stmnt.close();
     } catch (Exception e) {
       System.out.println("Could not get user - " + e.getMessage());
     }
@@ -175,6 +172,22 @@ public class UserDAO implements DAO {
 
   @Override
   public boolean update(Object obj) {
+    User user = (User)obj;
+
+    try {
+      this.query = "UPDATE _user SET name = ?, description = ? WHERE id = ?;";
+
+      this.stmnt = this.dbConn.prepareStatement(this.query);
+      this.stmnt.setString(1, user.getName());
+      this.stmnt.setString(2, user.getDescription());
+      this.stmnt.setInt(3, user.getId());
+      this.stmnt.executeUpdate();
+    } catch (Exception e) {
+      System.out.println("Could not update user - " + e.getMessage());
+
+      return false;
+    }
+
     return true;
   }
 

@@ -44,8 +44,8 @@ public class Server {
     Spark.post("/team/user", "application/json", utCntrllr.create);
     Spark.get("/team/:name/users", "application/json", utCntrllr.getByTeam);
     Spark.get("/user/:name/teams", "application/json", utCntrllr.getByUser);
-    Spark.put("/team/user", "application/json", utCntrllr.update);
-    Spark.delete("/team/user", "application/json", utCntrllr.delete);
+    Spark.put("/team/user/:name", "application/json", utCntrllr.update);
+    Spark.delete("/team/user/:name", "application/json", utCntrllr.delete);
 
     System.out.println("Server running - http://localhost:" + cfg.getPort());
   }

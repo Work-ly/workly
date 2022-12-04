@@ -15,6 +15,7 @@ import com.workly.handler.FirebaseHandler;
 import com.workly.model.FirebaseUser;
 import com.workly.model.Team;
 import com.workly.model.User;
+import com.workly.model.UserTeam;
 import com.workly.util.Message;
 import java.sql.Connection;
 import org.eclipse.jetty.http.HttpStatus;
@@ -80,8 +81,14 @@ public class TeamController {
     UserDAO userDAO = new UserDAO(dbConn);
     User user = (User)userDAO.getByUuid(fbUser.getLocalId());
 
-    // TODO(J0sueTM): Add created team to current user
-    UserTeamDAO userTeamDAO = new UserTeamDAO(dbConn);
+    UserTeamDAO utDAO = new UserTeamDAO(dbConn);
+    UserTeam ut = new UserTeam();
+    ut.setUser(user);
+    ut.setId(utDAO.create(ut));
+    if (ut.getId() <= 0) {
+      response.status(HttpStatus.CREATED_201);
+      return gson.toJson(new Message("ERROR", "Could not add current user to created team"));
+    }
 
     response.status(HttpStatus.OK_200);
     return gson.toJson(team, Team.class);

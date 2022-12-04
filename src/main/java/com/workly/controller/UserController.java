@@ -99,20 +99,33 @@ public class UserController {
     }
 
     ImageDAO imgDAO = new ImageDAO(dbConn);
-    int pfpImgId = imgDAO.create(user.getPfp());
-    if (pfpImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      pfpImgId = 1;
+    int pfpImgId = 1;
+    int headerImgId = 2;
+
+    if (!user.getPfp().getData().equals("")) {
+      pfpImgId = imgDAO.create(user.getPfp());
+      if (pfpImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+        pfpImgId = 1;
+      }
+
+      user.getPfp().setId(pfpImgId);
     }
 
-    int headerImgId = imgDAO.create(user.getHeader());
-    if (headerImgId <= 0) {
-      response.status(HttpStatus.CREATED_201);
-      headerImgId = 2;
+    if (!user.getPfp().getData().equals("")) {
+      headerImgId = imgDAO.create(user.getHeader());
+      if (headerImgId <= 0) {
+        response.status(HttpStatus.CREATED_201);
+        headerImgId = 2;
+      }
     }
 
-    user.getPfp().setId(pfpImgId);
-    user.getHeader().setId(headerImgId);
+    user.setPfp((Image)imgDAO.get(pfpImgId));
+    user.setHeader((Image)imgDAO.get(headerImgId));
+
+    if (user.getDescription().equals("")) {
+      user.setDescription("Hello! I began using Work.ly recently!");
+    }
 
     user.setUuid(fbUser.getLocalId());
     UserDAO userDAO = new UserDAO(dbConn);
@@ -281,10 +294,18 @@ public class UserController {
     }
 
     ImageDAO imgDAO = new ImageDAO(this.dbConn);
-    status = imgDAO.delete(user.getPfp()) && imgDAO.delete(user.getHeader());
+    if (user.getPfp().getId() != 1) {
+      status = imgDAO.delete(user.getPfp());
+      if (!status) {
+        return gson.toJson(new Message("INFO", "Could not delete user pfp"), Message.class);
+      }
+    }
 
-    if (!status) {
-      return gson.toJson(new Message("INFO", "Deleted user but could not delete user images"), Message.class);
+    if (user.getHeader().getId() != 2) {
+      status = imgDAO.delete(user.getHeader());
+      if (!status) {
+        return gson.toJson(new Message("INFO", "Could not delete user header"), Message.class);
+      }
     }
 
     return gson.toJson(new Message("INFO", "Deleted user successfully"), Message.class);

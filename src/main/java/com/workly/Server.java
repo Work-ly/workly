@@ -10,7 +10,6 @@ import com.workly.controller.TeamController;
 import com.workly.controller.UserController;
 import com.workly.controller.UserTeamController;
 import com.workly.handler.FirebaseHandler;
-import com.workly.model.UserTeam;
 import com.workly.util.MicroserviceConfig;
 import org.jetbrains.annotations.NotNull;
 import spark.Spark;

@@ -49,6 +49,40 @@ public class UserController {
 
     return new Message("INFO", "User authorized");
   }
+  
+  public Route login = (request, response) -> {
+    response.type("application/json");
+    
+    User user = this.gson.fromJson(request.body(), User.class);
+    FirebaseUser fbUser = fbHndlr.login(user);
+    if (fbUser == null) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+      return gson.toJson(new Message("ERROR", "Could not login user on firebase"), Message.class);
+    }
+            
+    UserDAO userDAO = new UserDAO(this.dbConn);
+    
+    user = (User)userDAO.getByUuid(fbUser.getLocalId());
+    if (user == null) {
+      response.status(HttpStatus.FAILED_DEPENDENCY_424);
+
+      return gson.toJson(new Message("ERROR", "Could not login user"));
+    }
+
+    ImageDAO imgDAO = new ImageDAO(this.dbConn);
+    user.setPfp((Image)imgDAO.get(user.getPfp().getId()));
+    user.setHeader((Image)imgDAO.get(user.getHeader().getId()));
+    
+    user.setPassword("");
+    String resp = "{\n\"wly_user\": "
+      + gson.toJson(user)
+      + ",\n\"firebase_user\": "
+      + gson.toJson(fbUser)
+      + "\n}";
+    response.status(HttpStatus.OK_200);
+
+    return resp;
+  };
 
   public Route login = (request, response) -> {
     response.type("application/json");

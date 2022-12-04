@@ -31,6 +31,21 @@ public class FirebaseHandler {
 
     return fetcher.fetch(method, newUri, reqBody);
   }
+  
+  public FirebaseUser login(User user) {
+    String reqBody = gson.toJson(user, User.class);
+    
+    Message status = this.fetch("/accounts:signInWithPassword", "POST", reqBody);
+    if (status.getType() != "INFO") {
+      System.out.println("Could not login user on firebase - " + status.getMsg());
+
+      return null;
+    }
+    
+    FirebaseUser fbUser = gson.fromJson(status.getMsg(), FirebaseUser.class);
+
+    return fbUser;
+  }
 
   public FirebaseUser login(User user) {
     String reqBody = gson.toJson(user, User.class);

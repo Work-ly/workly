@@ -87,27 +87,6 @@ public class TeamController {
     return gson.toJson(team, Team.class);
   };
 
-  public Route get = (request, response) -> {
-    response.type("application/json");
-
-    response.status(HttpStatus.OK_200);
-    return gson.toJson(new Message("INFO", "Got it"), Message.class);
-  };
-
-  public Route getByUser = (request, response) -> {
-    response.type("application/json");
-
-    response.status(HttpStatus.OK_200);
-    return gson.toJson(new Message("INFO", "Got them by user"), Message.class);
-  };
-
-  public Route getByTeam = (request, response) -> {
-    response.type("application/json");
-
-    response.status(HttpStatus.OK_200);
-    return gson.toJson(new Message("INFO", "Got them by team"), Message.class);
-  };
-
   public Route update = (request, response) -> {
     response.type("application/json");
 

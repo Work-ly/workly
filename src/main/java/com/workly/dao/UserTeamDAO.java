@@ -56,7 +56,6 @@ public class UserTeamDAO implements DAO {
       }
 
       this.stmnt.close();
-      this.rsltSet.close();
     } catch (Exception e) {
       System.out.println("Could not create user team on database - " + e.getMessage());
 

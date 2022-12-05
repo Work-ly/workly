@@ -9,17 +9,15 @@ package com.workly.controller;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.workly.dao.ImageDAO;
 import com.workly.dao.TeamDAO;
-import com.workly.model.FirebaseUser;
-import com.workly.model.Team;
+import com.workly.model.*;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.Gson;
 import com.workly.dao.UserDAO;
 import com.workly.dao.UserTeamDAO;
 import com.workly.handler.FirebaseHandler;
-import com.workly.model.User;
-import com.workly.model.UserTeam;
 import com.workly.util.Message;
 import org.eclipse.jetty.http.HttpStatus;
 
@@ -27,7 +25,7 @@ import spark.Route;
 
 public class UserTeamController {
   /* gson */
-  private Gson gson = new Gson();
+  private final Gson gson = new Gson();
   /* fbHndlr */
   private FirebaseHandler fbHndlr;
   /* dbConn */
@@ -105,8 +103,37 @@ public class UserTeamController {
       return gson.toJson(new Message("ERROR", "Could not delete user - [firebase]"), Message.class);
     }
 
+    UserDAO userDAO = new UserDAO(this.dbConn);
+    User user = (User)userDAO.get(request.params(":name"));
+    if (user == null) {
+      response.status(HttpStatus.BAD_REQUEST_400);
+      return gson.toJson(new Message("ERROR", "Could not get teams from user - User doesn't exist"));
+    }
+
+    UserTeamDAO utDAO = new UserTeamDAO(this.dbConn);
+    ArrayList<UserTeam> uts = (ArrayList<UserTeam>) utDAO.getByUser(user);
+
+    String resp = "{ \"teams\": [";
+    TeamDAO teamDAO = new TeamDAO(this.dbConn);
+    ImageDAO imgDAO = new ImageDAO(this.dbConn);
+    for (int i = 0; i < uts.size(); ++i) {
+      Team team = uts.get(i).getTeam();
+      team = (Team)teamDAO.getById(team.getId());
+      if (team != null) {
+        team.setPfp((Image)imgDAO.get(team.getPfp().getId()));
+        team.setHeader((Image)imgDAO.get(team.getHeader().getId()));
+
+        resp += gson.toJson(team, Team.class);
+
+        if (i < uts.size() - 1) {
+          resp += ", ";
+        }
+      }
+    }
+    resp += "]\n}";
+
     response.status(HttpStatus.OK_200);
-    return gson.toJson(new Message("INFO", "Got them by user"), Message.class);
+    return resp;
   };
 
   public Route getUsersByTeam = (request, response) -> {
@@ -132,10 +159,14 @@ public class UserTeamController {
 
     String resp = "{ \"users\": [";
     UserDAO userDAO = new UserDAO(this.dbConn);
+    ImageDAO imgDAO = new ImageDAO(this.dbConn);
     for (int i = 0; i < uts.size(); ++i) {
       User user = uts.get(i).getUser();
       user = (User)userDAO.getById(user.getId());
       if (user != null) {
+        user.setPfp((Image)imgDAO.get(user.getPfp().getId()));
+        user.setHeader((Image)imgDAO.get(user.getHeader().getId()));
+
         resp += gson.toJson(user, User.class);
 
         if (i < uts.size() - 1) {

@@ -1,0 +1,192 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 100663296 bytes for Failed to commit area from 0x00000000a1a00000 to 0x00000000a7a00000 of length 100663296.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./open/src/hotspot/os/windows/os_windows.cpp:3276), pid=8140, tid=10560
+#
+# JRE version:  (11.0.13+10) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (11.0.13+10-LTS-370, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: com.workly.App
+
+Host: Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz, 4 cores, 5G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1741)
+Time: Mon Dec  5 08:58:24 2022 Hora oficial do Brasil elapsed time: 0.750152 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000002d57febd000):  JavaThread "Unknown thread" [_thread_in_vm, id=10560, stack(0x000000d9ede00000,0x000000d9edf00000)]
+
+Stack: [0x000000d9ede00000,0x000000d9edf00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x62870a]
+V  [jvm.dll+0x761f2f]
+V  [jvm.dll+0x7635d9]
+V  [jvm.dll+0x763c63]
+V  [jvm.dll+0x23d728]
+V  [jvm.dll+0x625aba]
+V  [jvm.dll+0x61a855]
+V  [jvm.dll+0x2f242c]
+V  [jvm.dll+0x2f22b2]
+V  [jvm.dll+0x2f6fd6]
+V  [jvm.dll+0x3395ff]
+V  [jvm.dll+0x339030]
+V  [jvm.dll+0x2cfa38]
+V  [jvm.dll+0x2d0ba6]
+V  [jvm.dll+0x73c547]
+V  [jvm.dll+0x73dddf]
+V  [jvm.dll+0x346369]
+V  [jvm.dll+0x721e60]
+V  [jvm.dll+0x3b500f]
+V  [jvm.dll+0x3b7121]
+C  [jli.dll+0x5207]
+C  [ucrtbase.dll+0x21bb2]
+C  [KERNEL32.DLL+0x17034]
+C  [ntdll.dll+0x52651]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x000002d57e5b4ff0, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x000002d57fed3000 GCTaskThread "GC Thread#0" [stack: 0x000000d9edf00000,0x000000d9ee000000] [id=10536]
+  0x000002d57fef7800 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000d9ee000000,0x000000d9ee100000] [id=10496]
+  0x000002d57fef9000 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000d9ee100000,0x000000d9ee200000] [id=11212]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffed52eecc7]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000002d57feb9420] Heap_lock - owner thread: 0x000002d57febd000
+
+Heap address: 0x00000000a1a00000, size: 1510 MB, Compressed Oops mode: Non-zero based: 0x00000000a1a00000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff662e80000 - 0x00007ff662e8f000 	F:\jdk-11.0.13\bin\java.exe
+0x00007fff13530000 - 0x00007fff13727000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007fff11fa0000 - 0x00007fff1205d000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007fff10ff0000 - 0x00007fff112bd000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007fff112f0000 - 0x00007fff113f0000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffefd110000 - 0x00007ffefd125000 	F:\jdk-11.0.13\bin\VCRUNTIME140.dll
+0x00007ffefe500000 - 0x00007ffefe518000 	F:\jdk-11.0.13\bin\jli.dll
+0x00007fff12b10000 - 0x00007fff12bbe000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007fff133c0000 - 0x00007fff1345e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007fff12970000 - 0x00007fff12a0c000 	C:\WINDOWS\System32\sechost.dll
+0x00007fff11590000 - 0x00007fff116b5000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007fff116c0000 - 0x00007fff11860000 	C:\WINDOWS\System32\USER32.dll
+0x00007fff10e60000 - 0x00007fff10e82000 	C:\WINDOWS\System32\win32u.dll
+0x00007fff11a60000 - 0x00007fff11a8a000 	C:\WINDOWS\System32\GDI32.dll
+0x00007fff113f0000 - 0x00007fff114fb000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007fff10dc0000 - 0x00007fff10e5d000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007fff02e10000 - 0x00007fff030aa000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e\COMCTL32.dll
+0x00007fff0af70000 - 0x00007fff0af7a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007fff12ae0000 - 0x00007fff12b10000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffefd070000 - 0x00007ffefd10b000 	F:\jdk-11.0.13\bin\msvcp140.dll
+0x00007ffed5010000 - 0x00007ffed5b23000 	F:\jdk-11.0.13\bin\server\jvm.dll
+0x00007fff12600000 - 0x00007fff12608000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007fff01060000 - 0x00007fff01069000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007fff12120000 - 0x00007fff1218b000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007fff002a0000 - 0x00007fff002c7000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007fff0eb70000 - 0x00007fff0eb82000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007fff0c8b0000 - 0x00007fff0c8c0000 	F:\jdk-11.0.13\bin\verify.dll
+0x00007fff01b20000 - 0x00007fff01d04000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007fff027e0000 - 0x00007fff0280c000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007fff11500000 - 0x00007fff11582000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffefd040000 - 0x00007ffefd068000 	F:\jdk-11.0.13\bin\java.dll
+0x00007fff00f90000 - 0x00007fff00f9a000 	F:\jdk-11.0.13\bin\jimage.dll
+0x00007ffefd020000 - 0x00007ffefd036000 	F:\jdk-11.0.13\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;F:\jdk-11.0.13\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e;F:\jdk-11.0.13\bin\server
+
+VM Arguments:
+java_command: com.workly.App
+java_class_path (initial): F:\workly\target\classes;C:\Users\Aluno\.m2\repository\com\sparkjava\spark-core\2.9.4\spark-core-2.9.4.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-server\9.4.48.v20220622\jetty-server-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\javax\servlet\javax.servlet-api\3.1.0\javax.servlet-api-3.1.0.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-http\9.4.48.v20220622\jetty-http-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-util\9.4.48.v20220622\jetty-util-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-io\9.4.48.v20220622\jetty-io-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-webapp\9.4.48.v20220622\jetty-webapp-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-xml\9.4.48.v20220622\jetty-xml-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-servlet\9.4.48.v20220622\jetty-servlet-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-security\9.4.48.v20220622\jetty-security-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-util-ajax\9.4.48.v20220622\jetty-util-ajax-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\websocket\websocket-server\9.4.48.v20220622\websocket-server-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\websocket\websocket-common\9.4.48.v20220622\websocket-common-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\websocket\websocket-client\9.4.48.v20220622\websocket-client-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\jetty-client\9.4.48.v20220622\jetty-client-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\websocket\websocket-servlet\9.4.48.v20220622\websocket-servlet-9.4.48.v20220622.jar;C:\Users\Aluno\.m2\repository\org\eclipse\jetty\websocket\websocket-api\9.4.48.v20220622\websocket-api-9.4.48.v20220622.jar;C:\Users\Alu
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 3                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 1                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 4                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 100663296                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 1583349760                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5830732                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122913754                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122913754                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=F:\jdk-11.0.13
+PATH=C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Python38\Scripts\;C:\Program Files\Python38\;C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\Program Files (x86)\Embarcadero\Studio\20.0\bin;C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl;C:\Program Files (x86)\Embarcadero\Studio\20.0\bin64;C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\Win64;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\\FastReport VCL Trial\Bin;C:\Program Files\Microsoft VS Code\bin;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\\FastReport VCL Trial\Bin;C:\Program Files (x86)\\FastReport VCL Trial\Bin;C:\Program Files (x86)\\FastReport VCL Trial\Bin;C:\Program Files (x86)\\FastReport VCL Trial\Bin;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files (x86)\Autodesk\Backburner\;C:\Users\Aluno\AppData\Local\Microsoft\WindowsApps;
+USERNAME=Aluno
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 60 Stepping 3, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 19041 (10.0.19041.1741)
+
+CPU:total 4 (initial active 4) (4 cores per cpu, 1 threads per core) family 6 model 60 stepping 3 microcode 0x28, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, tsc, tscinvbit, bmi1, bmi2, fma
+
+Memory: 4k page, system-wide physical 6034M (414M free)
+TotalPageFile size 7442M (AvailPageFile size 53M)
+current process WorkingSet (physical memory assigned to process): 9M, peak: 9M
+current process commit charge ("private bytes"): 51M, peak: 147M
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (11.0.13+10-LTS-370) for windows-amd64 JRE (11.0.13+10-LTS-370), built on Sep 15 2021 22:10:36 by "mach5one" with MS VC++ 15.9 (VS2017)
+
+END.

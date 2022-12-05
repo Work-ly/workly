@@ -226,6 +226,7 @@ public class UserController {
     }
 
     User newUser = gson.fromJson(request.body(), User.class);
+    newUser.setEmail(oldUser.getEmail());
     if (newUser == null) {
       response.status(HttpStatus.BAD_REQUEST_400);
 

@@ -8,15 +8,14 @@ package com.workly.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Project {
-    /* id */
     @SerializedName("id")
     private int id;
-    /* name */
     @SerializedName("name")
     private String name;
-    /* description */
     @SerializedName("description")
     private String description;
+    @SerializedName("team")
+    private Team team;
 
     public Project() {
     }
@@ -51,4 +50,11 @@ public class Project {
         this.description = description;
     }
 
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
